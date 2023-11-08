@@ -1,0 +1,76 @@
+﻿@page "/"
+
+@using BlazorEcuasolmovsa.Services
+@inject BlazorEcuasolmovsa.Services.IEcuasolmovsaAPIClient ecuasolmovsaAPIClient
+
+
+<h3>Index</h3>
+
+<h3>Iniciar sesión</h3>
+
+<form>
+    <div class="form-group">
+        <label for="usuario">Usuario:</label>
+        <input type="text" id="usuario" class="form-control" @bind="usuario" />
+    </div>
+    <div class="form-group">
+        <label for="contrasenia">Contraseña:</label>
+        <input type="password" id="contrasenia" class="form-control" @bind="contrasenia" />
+    </div>
+    <button  @onclick="IniciarSesion">Iniciar sesión</button>
+</form>
+
+@if (mostrarMensaje)
+{
+        <div class="alert @claseAlerta">
+        @mensaje
+        </div>
+}
+
+@code {
+    public string usuario;
+    public string contrasenia;
+    private bool mostrarMensaje = false;
+    private string mensaje = "";
+    private string claseAlerta = "";
+
+
+
+    private async Task IniciarSesion()
+    {
+        // Llamada a la API para autenticar al usuario
+        var resultado = await ecuasolmovsaAPIClient.GetUsuarioDetails(usuario, contrasenia);
+        string observacionJ = resultado.observacion;
+
+        if (observacionJ == "INGRESO EXITOSO")
+        {
+            // Realiza acciones para un ingreso exitoso
+            mostrarMensaje = true;
+            mensaje = "Ingreso Correcto";
+            claseAlerta = "alert-success";
+            Console.WriteLine("Ingreso Correcto");
+        }
+        else if (observacionJ == "CONTRASEÑA INVALIDA")
+        {
+            // Realiza acciones para un ingreso incorrecto
+            mostrarMensaje = true;
+            mensaje = "Contraseña Incorrecta";
+            claseAlerta = "alert-danger";
+            Console.WriteLine("Contraseña Incorrecta");
+        }
+        else
+        {
+            // Otros casos o manejo de errores
+            mostrarMensaje = true;
+            mensaje = "Ingreso Incorrecto";
+            claseAlerta = "alert-danger";
+            Console.WriteLine("Ingreso Incorrecto");
+        }
+
+        
+    }
+
+
+
+}
+
