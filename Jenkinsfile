@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Step 1: Clonar Repositorio') {
             steps {
-                git 'https://github.com/usuario/mi-repo-dotnet.git'
+                git credentialsId: 'github-ssh', url: 'git@github.com:alexq2002/G1_LoginAPI.git'
             }
         }
         stage('Step 2: Compilar Proyecto .NET') {
